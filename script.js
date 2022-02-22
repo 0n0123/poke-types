@@ -1,30 +1,17 @@
-import { Type, Types, getType, judge } from './types.js';
+import { Types, getType, judge } from './types.js';
 
 const selections = document.getElementById('selection');
 
 for (const type of Types) {
-    const button = createTypeButton(type);
+    const button = createElement('button', {
+        text: type.name,
+        className: 'type_' + type.id,
+        attr: {
+            tabIndex: '-1'
+        },
+        onclick: e => typeSelected.set(type)
+    });
     selections.appendChild(button);
-}
-
-function onTypeClick(e) {
-    const typeId = e.target.dataset.id;
-    const type = getType(typeId);
-    typeSelected.set(type);
-}
-
-/**
- * 
- * @param {Type} type 
- */
-function createTypeButton(type) {
-    const elm = document.createElement('button');
-    elm.innerText = type.name;
-    elm.className = 'type_' + type.id;
-    elm.dataset.id = type.id;
-    elm.tabIndex = '-1';
-    elm.onclick = onTypeClick;
-    return elm;
 }
 
 const typeSelected = {
@@ -44,37 +31,42 @@ const typeSelected = {
     },
     set: function (type) {
         const elm = this.elms[this.index];
-        elm.className = 'type_' + type.id;
+        elm.classList.add('type_' + type.id);
         elm.dataset.id = type.id;
-        elm.value = type.name;
+        elm.textContent = type.name;
+        elm.classList.remove('highlight');
         if (this.index === this.elms.length - 1) {
             this.index = 0;
         } else {
             this.index++;
         }
-        this.elms[this.index].focus();
-        judgeButton.classList.add('highlight');
-        judgeButton.disabled = false;
+        this.elms[this.index].classList.add('highlight');
     },
     clear: function () {
         for (const elm of this.elms) {
-            elm.className = '';
+            elm.className = 'selected-type';
             elm.dataset.id = '';
-            elm.value = '';
+            elm.textContent = elm.dataset.placeholder;
         }
         this.index = 0;
-        this.elms[0].focus();
-        judgeButton.classList.remove('highlight');
-        judgeButton.disabled = true;
+        this.elms[0].classList.add('highlight');
     }
 };
 
-typeSelected.elms.forEach(elm => elm.onfocus = function (_) {
-    const index = typeSelected.elms.findIndex(e => e.id === elm.id);
-    typeSelected.index = index;
-});
-
-typeSelected.elms[0].focus();
+for (const elm of typeSelected.elms) {
+    elm.onclick = function () {
+        const index = typeSelected.elms.findIndex(e => e.id === elm.id);
+        typeSelected.index = index;
+        elm.dataset.id = '';
+        elm.textContent = elm.dataset.placeholder;
+        for (const e of typeSelected.elms) {
+            e.classList.remove('highlight');
+        }
+        elm.className = 'selected-type highlight';
+        selectionContainer.open = true;
+        resultContainer.open = false;
+    };
+}
 
 const selectionContainer = document.getElementById('selection-container');
 const resultContainer = document.getElementById('result-container');
@@ -95,15 +87,11 @@ judgeButton.onclick = function () {
     } else if (types.right.length > 0) {
         showDefenceEffect(types.left, types.right);
     } else {
-        alert('エラー');
         return;
     }
 
     resultContainer.open = true;
     selectionContainer.open = false;
-
-    judgeButton.classList.remove('highlight');
-    judgeButton.disabled = true;
 };
 
 const resultTypeContainer = document.getElementById('result-types');
@@ -113,13 +101,12 @@ function showAttackEffect(left, rights) {
     resultTypeContainer.innerHTML = '';
     resultLabel.textContent = '';
     if (rights.length === 0) {
-        const effects = Types.map(type => ({
+        Types.map(type => ({
             type,
             effect: judge(left, [type])
         })).sort((t1, t2) => t2.effect.rate - t1.effect.rate)
         .map(r => createResultType(r.type, r.effect))
         .forEach(el => resultTypeContainer.appendChild(el));
-        console.log(effects);
     } else {
         const result = judge(left, rights);
         resultLabel.textContent = `${result.text}(${result.rate})`;
@@ -133,7 +120,7 @@ function showDefenceEffect(left, rights) {
         const result = judge(left, rights);
         resultLabel.textContent = `${result.text}(${result.rate})`;
     } else {
-        const effects = Types.map(type => ({
+        Types.map(type => ({
             type,
             effect: judge(type, rights)
         })).sort((t1, t2) => t2.effect.rate - t1.effect.rate)
@@ -156,16 +143,63 @@ function showResultLabel(left, rights) {
 }
 
 function createResultType(type, judge) {
-    const typeDiv = document.createElement('div');
-    typeDiv.className = 'result-type';
-    const typeLabel = document.createElement('label');
-    typeLabel.className = 'type_' + type.id;
-    typeLabel.textContent = type.name;
-    const judgeSpan = document.createElement('span');
-    judgeSpan.className = 'result-type-judge';
-    judgeSpan.textContent = `${judge.text}(${judge.rate})`;
-    typeDiv.appendChild(typeLabel);
-    typeDiv.appendChild(judgeSpan);
+    const typeDiv = createElement('div', {
+        className: 'result-type'
+    }, [
+        createElement('label', {
+            className: 'type_' + type.id,
+            text: type.name
+        }),
+        createElement('span', {
+            className: 'result-type-judge',
+            text: `${judge.text}(${judge.rate})`
+        })
+    ]);
     return typeDiv;
+}
 
+/**
+ * 
+ * @param {string} tag 
+ * @param {{
+ *  id?: string,
+ *  className?: string,
+ *  text?: string,
+ *  dataset?: Object<string, string>,
+ *  attr?: Object<string, string>,
+ *  onclick?: function (MouseEvent) => void
+ * }} option
+ * @param {HTMLElement} [children]
+ * @returns {HTMLElement}
+ */
+function createElement(tag, option, children) {
+    const elm = document.createElement(tag);
+    if (option.id) {
+        elm.id = option.id;
+    }
+    if (option.className) {
+        elm.className = option.className;
+    }
+    if (option.text) {
+        elm.textContent = option.text;
+    }
+    if (option.dataset) {
+        for (const key in option.dataset) {
+            elm.dataset[key] = option.dataset[key];
+        }
+    }
+    if (option.attr) {
+        for (const key in option.attr) {
+            elm[key] = option.attr[key];
+        }
+    }
+    if (option.onclick) {
+        elm.onclick = e => option.onclick(e);
+    }
+    if (children) {
+        for (const child of children) {
+            elm.appendChild(child);
+        }
+    }
+    return elm;
 }

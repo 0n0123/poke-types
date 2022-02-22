@@ -4,24 +4,27 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="shortcut icon" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png" />
     <link rel="stylesheet" href="style.css">
     <title>タイプ相性確認</title>
 </head>
 <body>
     <div id="selected">
         <div id="left">
-            <input type="text" id="left-type" tabindex="1" placeholder="わざタイプ" readonly>
+            <div id="left-type" data-placeholder="わざタイプ" class="selected-type highlight">わざタイプ</div>
         </div>
         <div id="vs">
             <button id="clear">クリア</button>
         </div>
         <div id="right">
-            <input type="text" id="right-type1" tabindex="3" placeholder="タイプ1" readonly>
-            <input type="text" id="right-type2" tabindex="4" placeholder="タイプ2" readonly>
+            <div id="right-type1" data-placeholder="タイプ1" class="selected-type">タイプ1</div>
+            <div id="right-type2" data-placeholder="タイプ2" class="selected-type">タイプ2</div>
         </div>
     </div>
 
-    <button id="judge" disabled>GO!</button>
+    <button id="judge">GO!</button>
 
     <details id="selection-container" open>
         <summary>タイプ選択</summary>

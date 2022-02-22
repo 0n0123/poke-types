@@ -19,17 +19,30 @@ export class Type {
     }
 
     /**
-     * @param {Type} type 
+     * @param {Type} type
+     * @returns {{ effect: string, rate: number }}
      */
     attack (type) {
         if (this.good.includes(type.id)) {
-            return 1.6;
+            return {
+                effect: 'good',
+                rate: 1.6
+            };
         } else if (this.bad.includes(type.id)) {
-            return 0.625;
+            return {
+                effect: 'bad',
+                rate: 0.625
+            };
         } else if (this.ne.includes(type.id)) {
-            return 0.39;
+            return {
+                effect: 'ne',
+                rate: 0.39
+            };
         } else {
-            return 1;
+            return {
+                effect: 'normal',
+                rate: 1
+            };
         }
     }
 }
@@ -159,23 +172,22 @@ export function getType(id) {
 /**
  * @param {Type} own 
  * @param {Type[]} others 
- * @returns {{ rate: number, text: string }}
+ * @returns {{ rate: string, text: string }}
  */
 export function judge(own, others) {
-    const rate = parseFloat(others.map(t => own.attack(t)).reduce((p, c) => p *= c, 1).toFixed(2));
+    const effects = others.map(t => own.attack(t));
+    const rate = effects.reduce((p, c) => p *= c.rate, 1).toFixed(2);
     const text = (r => {
-        if (r >= 2.56) {
-            return '○ 超ばつぐん'
-        } else if (r >= 1.6) {
-            return '○ ばつぐん';
-        } else if (r <= 0.24) {
-            return '× 効果なしなし';
-        } else if (r <= 0.39) {
+        if (effects.some(e => e.effect === 'ne')) {
             return '× 効果なし';
-        } else if (r <= 0.63) {
-            return '△ いまひとつ';
         } else {
-            return '・ 効果あり';
+            if (r >= 1.6) {
+                return '○ ばつぐん'
+            } else if (r <= 0.63) {
+                return '△ いまひとつ';
+            } else {
+                return '・ 効果あり';
+            }
         }
     })(rate);
     return {
