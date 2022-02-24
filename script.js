@@ -14,35 +14,54 @@ for (const type of Types) {
     selections.appendChild(button);
 }
 
-const typeSelected = {
-    index: 0,
-    elms: [
-        document.getElementById('left-type'),
-        document.getElementById('right-type1'),
-        document.getElementById('right-type2')
-    ],
-    getSelectedTypes: function () {
+const typeSelected = new class {
+    constructor () {
+        this.index = 0;
+        this.elms = [
+            document.getElementById('left-type'),
+            document.getElementById('right-type1'),
+            document.getElementById('right-type2')
+        ];
+        for (const elm of this.elms) {
+            elm.onclick = () => {
+                const index = this.elms.findIndex(e => e.id === elm.id);
+                typeSelected.index = index;
+                elm.dataset.id = '';
+                elm.textContent = elm.dataset.placeholder;
+                for (const e of typeSelected.elms) {
+                    e.classList.remove('highlight');
+                }
+                elm.className = 'selected-type highlight';
+                selectionContainer.open = true;
+                resultContainer.open = false;
+            };
+        }        
+    }
+
+    getSelectedTypes() {
         const [left, right1, right2] = this.elms.map(el => el.dataset.id ? getType(el.dataset.id) : null);
         const rights = right1 !== null && right2 !== null && right1.id === right2.id ? [right1] : [right1, right2];
         return {
             left: left,
             right: rights.filter(type => type !== null)
         };
-    },
-    set: function (type) {
+    }
+
+    set(type) {
         const elm = this.elms[this.index];
+        elm.className = 'selected-type';
         elm.classList.add('type_' + type.id);
         elm.dataset.id = type.id;
         elm.textContent = type.name;
-        elm.classList.remove('highlight');
         if (this.index === this.elms.length - 1) {
             this.index = 0;
         } else {
             this.index++;
         }
         this.elms[this.index].classList.add('highlight');
-    },
-    clear: function () {
+    }
+
+    clear() {
         for (const elm of this.elms) {
             elm.className = 'selected-type';
             elm.dataset.id = '';
@@ -53,25 +72,9 @@ const typeSelected = {
     }
 };
 
-for (const elm of typeSelected.elms) {
-    elm.onclick = function () {
-        const index = typeSelected.elms.findIndex(e => e.id === elm.id);
-        typeSelected.index = index;
-        elm.dataset.id = '';
-        elm.textContent = elm.dataset.placeholder;
-        for (const e of typeSelected.elms) {
-            e.classList.remove('highlight');
-        }
-        elm.className = 'selected-type highlight';
-        selectionContainer.open = true;
-        resultContainer.open = false;
-    };
-}
+const clearButton = document.getElementById('clear');
 
-const selectionContainer = document.getElementById('selection-container');
-const resultContainer = document.getElementById('result-container');
-
-document.getElementById('clear').onclick = e => {
+clearButton.onclick = e => {
     typeSelected.clear();
     selectionContainer.open = true;
     resultContainer.open = false;
@@ -94,6 +97,8 @@ judgeButton.onclick = function () {
     selectionContainer.open = false;
 };
 
+const selectionContainer = document.getElementById('selection-container');
+const resultContainer = document.getElementById('result-container');
 const resultTypeContainer = document.getElementById('result-types');
 const resultLabel = document.getElementById('result-label');
 
