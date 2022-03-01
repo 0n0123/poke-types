@@ -134,12 +134,19 @@ function showDefenceEffect(left, rights) {
     }
 }
 
+function url(nums) {
+    return `https://zukan.pokemon.co.jp/?${nums.map(num => 'type%5B%5D=' + num).join('&')}`;
+}
+
 function showResultLabel(left, rights) {
     const label = document.getElementById('result-title');
+    label.innerHTML = '';
+    const link = (pre, suf) => 
+        `${pre}<a href="${url(rights.map(type => type.number))}" id="zukan-link" target="_blank">${rights.map(type => type.name).join(', ')} タイプ</a>${suf}`;
     if (left && rights.length > 0) {
-        label.textContent = left.name + ' わざの ' + rights.map(type => type.name).join(', ') + ' タイプへの効果';
+        label.insertAdjacentHTML('beforeend', link(`${left.name} わざの `, 'への効果'));
     } else if (!left && rights.length > 0) {
-        label.textContent = rights.map(type => type.name).join(',') + ' タイプへの効果';
+        label.insertAdjacentHTML('beforeend', link('', 'への効果'));
     } else if (left && rights.length === 0) {
         label.textContent = left.name + ' わざの相手タイプへの効果';
     } else {

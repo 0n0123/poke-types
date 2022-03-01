@@ -9,6 +9,8 @@ export class Type {
     bad;
     /** @type {string[]} */
     ne;
+    /** @type {number} */
+    number;
 
     constructor (id, option) {
         this.id = id;
@@ -16,6 +18,7 @@ export class Type {
         this.good = option.good || [];
         this.bad = option.bad || [];
         this.ne = option.ne || [];
+        this.number = option.number ?? 0;
     }
 
     /**
@@ -55,109 +58,127 @@ export const Types = [
         name: 'ノーマル',
         good: [],
         bad: ['rock', 'steel'],
-        ne: ['ghost']
+        ne: ['ghost'],
+        number: 1
     }),
     new Type('fire', {
         name: 'ほのお',
         good: ['grass', 'ice', 'bug', 'steel'],
         bad: ['fire', 'water', 'rock', 'dragon'],
-        ne: []
+        ne: [],
+        number: 2
     }),
     new Type('water', {
         name: 'みず',
         good: ['fire', 'ground', 'rock'],
         bad: ['water', 'grass', 'dragon'],
-        ne: []
+        ne: [],
+        number: 3
     }),
     new Type('grass', {
         name: 'くさ',
         good: ['water', 'ground', 'rock'],
         bad: ['fire', 'grass', 'poison', 'flying', 'bug', 'dragon', 'steel'],
-        ne: []
+        ne: [],
+        number: 4
     }),
     new Type('electric', {
         name: 'でんき',
         good: ['water', 'flying'],
         bad: ['electric', 'grass', 'dragon'],
-        ne: ['ground']
+        ne: ['ground'],
+        number: 5
     }),
     new Type('ice', {
         name: 'こおり',
         good: ['grass', 'ground', 'flying', 'dragon'],
         bad: ['fire', 'water', 'ice', 'steel'],
-        ne: []
+        ne: [],
+        number: 6
     }),
     new Type('fighting', {
         name: 'かくとう',
         good: ['normal', 'ice', 'rock', 'dark', 'steel'],
         bad: ['poison', 'flying', 'psychic', 'bug', 'fairy'],
-        ne: ['ghost']
+        ne: ['ghost'],
+        number: 7
     }),
     new Type('poison', {
         name: 'どく',
         good: ['grass', 'fairy'],
         bad: ['poison', 'ground', 'rock', 'ghost'],
-        ne: ['steel']
+        ne: ['steel'],
+        number: 8
     }),
     new Type('ground', {
         name: 'じめん',
         good: ['fire', 'electric', 'poison', 'rock', 'steel'],
         bad: ['grass', 'bug'],
-        ne: ['flying']
+        ne: ['flying'],
+        number: 9
     }),
     new Type('flying', {
         name: 'ひこう',
         good: ['grass', 'fighting', 'bug'],
         bad: ['electric', 'rock', 'steel'],
-        ne: []
+        ne: [],
+        number: 10
     }),
     new Type('psychic', {
         name: 'エスパー',
         good: ['fighting', 'poison'],
         bad: ['psychic', 'steel'],
-        ne: ['dark']
+        ne: ['dark'],
+        number: 11
     }),
     new Type('bug', {
         name: 'むし',
         good: ['grass', 'psychic', 'dark'],
         bad: ['fire', 'fighting', 'poison', 'flying', 'ghost', 'steel', 'fairy'],
-        ne: []
+        ne: [],
+        number: 12
     }),
     new Type('rock', {
         name: 'いわ',
         good: ['fire', 'ice', 'flying', 'bug'],
         bad: ['fighting', 'ground', 'steel'],
-        ne: []
+        ne: [],
+        number: 13
     }),
     new Type('ghost', {
         name: 'ゴースト',
         good: ['psychic', 'ghost'],
         bad: ['dark'],
-        ne: ['normal']
+        ne: ['normal'],
+        number: 14
     }),
     new Type('dragon', {
         name: 'ドラゴン',
         good: ['dragon'],
         bad: ['steel'],
-        ne: ['fairy']
+        ne: ['fairy'],
+        number: 15
     }),
     new Type('dark', {
         name: 'あく',
         good: ['psychic', 'ghost'],
         bad: ['fighting', 'dark', 'fairy'],
-        ne: []
+        ne: [],
+        number: 16
     }),
     new Type('steel', {
         name: 'はがね',
         good: ['ice', 'rock', 'fairy'],
         bad: ['fire', 'water', 'electric', 'steel'],
-        ne: []
+        ne: [],
+        number: 17
     }),
     new Type('fairy', {
         name: 'フェアリー',
         good: ['fighting', 'dragon', 'dark'],
         bad: ['fire', 'poison', 'steel'],
-        ne: []
+        ne: [],
+        number: 18
     })
 ];
 
