@@ -145,10 +145,13 @@ function showResultLabel(left, rights) {
         `${pre}<a href="${url(rights.map(type => type.number))}" id="zukan-link" target="_blank">${rights.map(type => type.name).join(', ')} タイプ</a>${suf}`;
     if (left && rights.length > 0) {
         label.insertAdjacentHTML('beforeend', link(`${left.name} わざの `, 'への効果'));
+        showResultAdditional(rights);
     } else if (!left && rights.length > 0) {
         label.insertAdjacentHTML('beforeend', link('', 'への効果'));
+        showResultAdditional(rights);
     } else if (left && rights.length === 0) {
         label.textContent = left.name + ' わざの相手タイプへの効果';
+        removeResultAdditional();
     } else {
         label.textContent = 'エラー';
     }
@@ -168,6 +171,30 @@ function createResultType(type, judge) {
         })
     ]);
     return typeDiv;
+}
+
+function showResultAdditional(types) {
+    const elm = document.getElementById('result-additional');
+    const label = document.getElementById('result-additional-label');
+    label.textContent = types.map(type => type.name).join(', ') + ' タイプの特性';
+    elm.innerHTML = '';
+    for (const type of types) {
+        if (!type.additional) {
+            continue;
+        }
+        for (const add of type.additional) {
+            const li = document.createElement('li');
+            li.textContent = add;
+            elm.appendChild(li);
+        }
+    }
+}
+
+function removeResultAdditional() {
+    const elm = document.getElementById('result-additional');
+    elm.innerHTML = '';
+    const label = document.getElementById('result-additional-label');
+    label.textContent = '';
 }
 
 /**

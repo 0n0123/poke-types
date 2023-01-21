@@ -11,6 +11,8 @@ export class Type {
     ne;
     /** @type {number} */
     number;
+    /** @type {string[]} */
+    additional;
 
     constructor (id, option) {
         this.id = id;
@@ -19,6 +21,7 @@ export class Type {
         this.bad = option.bad || [];
         this.ne = option.ne || [];
         this.number = option.number ?? 0;
+        this.additional = option.additional ??[];
     }
 
     /**
@@ -66,7 +69,10 @@ export const Types = [
         good: ['grass', 'ice', 'bug', 'steel'],
         bad: ['fire', 'water', 'rock', 'dragon'],
         ne: [],
-        number: 2
+        number: 2,
+        additional: [
+            '「やけど」にならない'
+        ]
     }),
     new Type('water', {
         name: 'みず',
@@ -80,21 +86,33 @@ export const Types = [
         good: ['water', 'ground', 'rock'],
         bad: ['fire', 'grass', 'poison', 'flying', 'bug', 'dragon', 'steel'],
         ne: [],
-        number: 4
+        number: 4,
+        additional: [
+            '「やどりぎのタネ」「キノコのほうし」無効',
+            'こな系ワザ無効'
+        ]
     }),
     new Type('electric', {
         name: 'でんき',
         good: ['water', 'flying'],
         bad: ['electric', 'grass', 'dragon'],
         ne: ['ground'],
-        number: 5
+        number: 5,
+        additional: [
+            '「まひ」にならない'
+        ]
     }),
     new Type('ice', {
         name: 'こおり',
         good: ['grass', 'ground', 'flying', 'dragon'],
         bad: ['fire', 'water', 'ice', 'steel'],
         ne: [],
-        number: 6
+        number: 6,
+        additional: [
+            '「こおり」にならない',
+            '「ゆき」の時 ぼうぎょx1.5',
+            '「ぜったいれいど」無効'
+        ]
     }),
     new Type('fighting', {
         name: 'かくとう',
@@ -108,21 +126,32 @@ export const Types = [
         good: ['grass', 'fairy'],
         bad: ['poison', 'ground', 'rock', 'ghost'],
         ne: ['steel'],
-        number: 8
+        number: 8,
+        additional: [
+            '「どく」「もうどく」にならない',
+            '「どくびし」を無力化(ひこうタイプ/ふゆう特性以外)'
+        ]
     }),
     new Type('ground', {
         name: 'じめん',
         good: ['fire', 'electric', 'poison', 'rock', 'steel'],
         bad: ['grass', 'bug'],
         ne: ['flying'],
-        number: 9
+        number: 9,
+        additional: [
+            '「でんじは」無効',
+            '「すなあらし」の時のダメージ0'
+        ]
     }),
     new Type('flying', {
         name: 'ひこう',
         good: ['grass', 'fighting', 'bug'],
         bad: ['electric', 'rock', 'steel'],
         ne: [],
-        number: 10
+        number: 10,
+        additional: [
+            '「まきびし」「どくびし」の効果を受けない'
+        ]
     }),
     new Type('psychic', {
         name: 'エスパー',
@@ -143,14 +172,20 @@ export const Types = [
         good: ['fire', 'ice', 'flying', 'bug'],
         bad: ['fighting', 'ground', 'steel'],
         ne: [],
-        number: 13
+        number: 13,
+        additional: [
+            '「すなあらし」の時 ダメージ0 & とくぼうx1.5'
+        ]
     }),
     new Type('ghost', {
         name: 'ゴースト',
         good: ['psychic', 'ghost'],
         bad: ['dark'],
         ne: ['normal'],
-        number: 14
+        number: 14,
+        additional: [
+            '逃げられなくなるワザや特性無効'
+        ]
     }),
     new Type('dragon', {
         name: 'ドラゴン',
@@ -164,14 +199,21 @@ export const Types = [
         good: ['psychic', 'ghost'],
         bad: ['fighting', 'dark', 'fairy'],
         ne: [],
-        number: 16
+        number: 16,
+        additional: [
+            '「いたずらごころ」特性で先制されたへんかワザ無効'
+        ]
     }),
     new Type('steel', {
         name: 'はがね',
         good: ['ice', 'rock', 'fairy'],
         bad: ['fire', 'water', 'electric', 'steel'],
         ne: [],
-        number: 17
+        number: 17,
+        additional: [
+            '「すなあらし」の時 ダメージ0',
+            '「どく」「もうどく」にならない'
+        ]
     }),
     new Type('fairy', {
         name: 'フェアリー',

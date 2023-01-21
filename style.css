@@ -97,7 +97,7 @@ label {
 }
 
 .highlight {
-    animation: highlight infinite alternate .5s ease-in-out;
+    animation: highlight infinite alternate .3s ease-in-out;
 }
 
 @keyframes highlight {
@@ -212,4 +212,8 @@ label {
 .type_fairy {
     background-color: #f7a;
     color: #fff;
+}
+
+li {
+    margin-left: 2rem;
 }
